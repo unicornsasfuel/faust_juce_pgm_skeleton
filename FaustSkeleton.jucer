@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="Bl18Zf" name="FaustSkeleton" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="Evermind" pluginFormats="buildStandalone,buildVST3"
-              companyWebsite="https://github.com/unicornsasfuel/">
-  <MAINGROUP id="s9tuB1" name="FaustSkeleton">
-    <GROUP id="{A8EDD86F-C97C-09CE-9A49-DFB2417A8041}" name="Resources"/>
-    <GROUP id="{B8337C1B-2841-8E22-EFB5-D419A35575D2}" name="Source">
-      <FILE id="oo76LA" name="DspFaust.h" compile="0" resource="0" file="Source/DspFaust.h"/>
-      <FILE id="nHmILG" name="DspFaust.cpp" compile="0" resource="0" file="Source/DspFaust.cpp"/>
-      <FILE id="PwBjLQ" name="PluginProcessor.cpp" compile="1" resource="0"
+<JUCERPROJECT id="iOmW6E" name="FaustPGMSkeleton" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+  <MAINGROUP id="ZucgVl" name="FaustPGMSkeleton">
+    <GROUP id="{DE74A05F-796A-C51C-5764-13161108F4F2}" name="Source">
+      <FILE id="UDzSoT" name="DspFaust.cpp" compile="0" resource="0" file="Source/DspFaust.cpp"/>
+      <FILE id="xGe8mf" name="DspFaust.h" compile="0" resource="0" file="Source/DspFaust.h"/>
+      <FILE id="TPRtD8" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="TkYUs6" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="o79AhI" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
     </GROUP>
   </MAINGROUP>
-  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"
-               FOLEYS_ENABLE_BINARY_DATA="0" FOLEYS_SHOW_GUI_EDITOR_PALLETTE="1"/>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
-    <VS2019 targetFolder="Builds/VisualStudio2019" extraDefs="MAGIC_LOAD_BINARY_DISABLED">
+    <VS2019 targetFolder="Builds/VisualStudio2019">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="FaustSkeleton"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="FaustSkeleton"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="NewProject"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="NewProject"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../misc/JUCE/JUCE/modules"/>
@@ -36,11 +32,80 @@
         <MODULEPATH id="juce_graphics" path="../../../misc/JUCE/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../../misc/JUCE/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../misc/JUCE/JUCE/modules"/>
-        <MODULEPATH id="juce_dsp" path="../../misc/JUCE/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../misc/JUCE/JUCE/modules"/>
-        <MODULEPATH id="foleys_gui_magic" path="../../misc/JUCE_modules"/>
+        <MODULEPATH id="foleys_gui_magic" path="../../../misc/JUCE_modules"/>
+        <MODULEPATH id="juce_dsp" path="../../../misc/JUCE/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../misc/JUCE/JUCE/modules"/>
       </MODULEPATHS>
     </VS2019>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="foleys_gui_magic" path="C:\music\misc\JUCE_modules"/>
+        <MODULEPATH id="juce_audio_basics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_dsp" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:\music\misc\JUCE\JUCE\modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="foleys_gui_magic" path="C:\music\misc\JUCE_modules"/>
+        <MODULEPATH id="juce_audio_basics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_dsp" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:\music\misc\JUCE\JUCE\modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+    <ANDROIDSTUDIO targetFolder="Builds/Android">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="foleys_gui_magic" path="C:\music\misc\JUCE_modules"/>
+        <MODULEPATH id="juce_audio_basics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_dsp" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:\music\misc\JUCE\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:\music\misc\JUCE\JUCE\modules"/>
+      </MODULEPATHS>
+    </ANDROIDSTUDIO>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="foleys_gui_magic" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
