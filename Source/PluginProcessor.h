@@ -14,7 +14,7 @@
 //==============================================================================
 /**
 */
-class FaustSkeletonAudioProcessor  : public foleys::MagicProcessor
+class NewProjectAudioProcessor  : public foleys::MagicProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -22,8 +22,8 @@ class FaustSkeletonAudioProcessor  : public foleys::MagicProcessor
 {
 public:
     //==============================================================================
-    FaustSkeletonAudioProcessor();
-    ~FaustSkeletonAudioProcessor() override;
+    NewProjectAudioProcessor();
+    ~NewProjectAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -36,11 +36,6 @@ public:
     void parameterChanged (const juce::String& param, float value);
 
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
-
-    //==============================================================================
-    //Not needed with PGM
-    //juce::AudioProcessorEditor* createEditor() override;
-    //bool hasEditor() const override;
 
     //==============================================================================
     const juce::String getName() const override;
@@ -57,22 +52,14 @@ public:
     const juce::String getProgramName (int index) override;
     void changeProgramName (int index, const juce::String& newName) override;
 
-    //==============================================================================
-    //Not needed with PGM
-    //void getStateInformation (juce::MemoryBlock& destData) override;
-    //void setStateInformation (const void* data, int sizeInBytes) override;
-
 private:
     //==============================================================================
     std::unique_ptr<::DspFaust> faustDsp;
-    std::unique_ptr<::MapUI> mapUI;
-    
-    float ** faustIO;
     
     int numParams;
     std::vector<std::string> paramNames {};
 
     juce::AudioProcessorValueTreeState treeState;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FaustSkeletonAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessor)
 };

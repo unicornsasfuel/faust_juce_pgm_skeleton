@@ -1,16 +1,11 @@
-/*
-  ==============================================================================
-
-   This file implements a JUCE effect plugin that expects FaustAPI generated
-   DSP files, such as those exported from the FAUST WebIDE using the
-   "source -> juce" option.
-
-  ==============================================================================
-*/
 
 #include "PluginProcessor.h"
 #include <JuceHeader.h>
 
+// Uncomment the #define directive below when your PGM XML file is ready
+// Add it to the project files with the name "magic.xml"
+
+//#define MAGIC_LOAD_BINARY
 
 juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
 {
@@ -18,6 +13,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
 
     std::unique_ptr<::DspFaust> tempDsp = std::make_unique<::DspFaust>(); 
 
+    // Iterate through Faust parameters and add them to the UI
     int numParams = tempDsp->getParamsCount();
 
     for (int i = 0; i < numParams; i++) {
@@ -38,23 +34,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
 }
 
 //==============================================================================
-FaustSkeletonAudioProcessor::FaustSkeletonAudioProcessor()
+NewProjectAudioProcessor::NewProjectAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : foleys::MagicProcessor (BusesProperties() 
+     : foleys::MagicProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-     ),
-    treeState (*this, nullptr, "PARAMETERS", createParameterLayout())
+                       ),
+                       treeState (*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
-
 {
     faustDsp = std::make_unique<::DspFaust>();
 
-    //add parameter listeners
+    //Iterate through UI parameters and add parameter listeners
     numParams = faustDsp->getParamsCount();
 
     for (int i = 0; i < numParams; i++) {
@@ -70,62 +65,74 @@ FaustSkeletonAudioProcessor::FaustSkeletonAudioProcessor()
     faustDsp->start();
 }
 
-FaustSkeletonAudioProcessor::~FaustSkeletonAudioProcessor()
+NewProjectAudioProcessor::~NewProjectAudioProcessor()
 {
     faustDsp->stop();
 }
 
 //==============================================================================
-const juce::String FaustSkeletonAudioProcessor::getName() const
+const juce::String NewProjectAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool FaustSkeletonAudioProcessor::acceptsMidi() const
+bool NewProjectAudioProcessor::acceptsMidi() const
 {
+   #if JucePlugin_WantsMidiInput
+    return true;
+   #else
     return false;
+   #endif
 }
 
-bool FaustSkeletonAudioProcessor::producesMidi() const
+bool NewProjectAudioProcessor::producesMidi() const
 {
+   #if JucePlugin_ProducesMidiOutput
+    return true;
+   #else
     return false;
+   #endif
 }
 
-bool FaustSkeletonAudioProcessor::isMidiEffect() const
+bool NewProjectAudioProcessor::isMidiEffect() const
 {
+   #if JucePlugin_IsMidiEffect
+    return true;
+   #else
     return false;
+   #endif
 }
 
-double FaustSkeletonAudioProcessor::getTailLengthSeconds() const
+double NewProjectAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int FaustSkeletonAudioProcessor::getNumPrograms()
+int NewProjectAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int FaustSkeletonAudioProcessor::getCurrentProgram()
+int NewProjectAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void FaustSkeletonAudioProcessor::setCurrentProgram (int index)
+void NewProjectAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String FaustSkeletonAudioProcessor::getProgramName (int index)
+const juce::String NewProjectAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void FaustSkeletonAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void NewProjectAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
-void FaustSkeletonAudioProcessor::parameterChanged (const juce::String& param, float value)
+void NewProjectAudioProcessor::parameterChanged (const juce::String& param, float value)
 {
 
     faustDsp->setParamValue(param.toRawUTF8(), value);
@@ -133,23 +140,36 @@ void FaustSkeletonAudioProcessor::parameterChanged (const juce::String& param, f
 }
 
 //==============================================================================
-void FaustSkeletonAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    // Parse Faust metadata to automatically set latency
+    juce::var parsedJson;
+    std::string jsonMeta = faustDsp->getJSONMeta();
+    if (!juce::JSON::parse(jsonMeta, parsedJson).failed()) {
+        auto meta = parsedJson["meta"];
+        int metaSize = meta.size();
 
-    // Report latency to host
-    // by samples
-    setLatencySamples(0);
-    // by seconds
-    //setLatencySamples(meta.fLatencySec * sampleRate);
-    
+        for (int i = 0; i < metaSize; i++) {
+            int foo = int(meta[i]["latency_samples"]);
+            if (meta[i]["latency_samples"]) {
+                setLatencySamples(int(meta[i]["latency_samples"]));
+            }
+            else if (meta[i]["latency_sec"]) {
+                setLatencySamples(int(meta[i]["latency_sec"]) * sampleRate);
+            }
+        }
+    }
+
 }
 
-void FaustSkeletonAudioProcessor::releaseResources()
+void NewProjectAudioProcessor::releaseResources()
 {
+    // When playback stops, you can use this as an opportunity to free up any
+    // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool FaustSkeletonAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool NewProjectAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -174,15 +194,14 @@ bool FaustSkeletonAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 }
 #endif
 
-void FaustSkeletonAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 
 }
-
 
 //==============================================================================
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new FaustSkeletonAudioProcessor();
+    return new NewProjectAudioProcessor();
 }
