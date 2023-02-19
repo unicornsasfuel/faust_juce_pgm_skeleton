@@ -196,7 +196,28 @@ bool NewProjectAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 
 void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    for (const auto metadata : midiMessages)
+    {
+        auto message = metadata.getMessage();
+        //TODO: this timestamp may not be in usec, need to read further
+        const int time = message.getTimeStamp();
+        int channel = message.getChannel();
+        const juce::uint8* rawmidi = message.getRawData();
+        int type = rawmidi[0] & 0xf0;
+        int count = message.getMessageLengthFromFirstByte(rawmidi[0]);
+        //DEBUG: Log MIDI messages
+        juce::Logger::writeToLog(message.getDescription());
 
+        int data1 = NULL;
+        int data2 = NULL;
+        if (count > 1) {
+            data1 = rawmidi[1];
+            if (count > 2) {
+                data2 = rawmidi[2];
+            }
+        }
+        faustDsp->propagateMidi(count, time, type, channel, data1, data2);
+    }
 }
 
 //==============================================================================
