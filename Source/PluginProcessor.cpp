@@ -7,32 +7,6 @@
 
 //#define MAGIC_LOAD_BINARY
 
-juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
-{
-    juce::AudioProcessorValueTreeState::ParameterLayout layout;
-
-    std::unique_ptr<::DspFaust> tempDsp = std::make_unique<::DspFaust>(); 
-
-    // Iterate through Faust parameters and add them to the UI
-    int numParams = tempDsp->getParamsCount();
-
-    for (int i = 0; i < numParams; i++) {
-        std::string paramName = tempDsp->getParamAddress(i);
-        layout.add(std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID(paramName, 1),
-            paramName,
-            juce::NormalisableRange<float>(
-                tempDsp->getParamMin(paramName.c_str()),
-                tempDsp->getParamMax(paramName.c_str())
-            ),
-            tempDsp->getParamInit(paramName.c_str()))
-        );
-    }
-
-    
-    return layout;
-}
-
 //==============================================================================
 NewProjectAudioProcessor::NewProjectAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -44,17 +18,26 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-                       treeState (*this, nullptr, "PARAMETERS", createParameterLayout())
+                       treeState (*this, nullptr)
 #endif
 {
     faustDsp = std::make_unique<::DspFaust>();
-
-    //Iterate through UI parameters and add parameter listeners
+    
+    //Iterate through UI parameters and add processor parameters / parameter listeners
     numParams = faustDsp->getParamsCount();
 
     for (int i = 0; i < numParams; i++) {
         std::string paramName = faustDsp->getParamAddress(i);
         paramNames.push_back(paramName);
+        addParameter(new juce::AudioParameterFloat(
+            juce::ParameterID(paramName, 1),
+            paramName,
+            juce::NormalisableRange<float>(
+                faustDsp->getParamMin(i),
+                faustDsp->getParamMax(i)
+                ),
+            faustDsp->getParamInit(i))
+        );
         treeState.addParameterListener (paramName, this);
     }
     
@@ -63,6 +46,7 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
 #endif
 
     faustDsp->start();
+
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor()
@@ -196,6 +180,7 @@ bool NewProjectAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 
 void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+
     for (const auto metadata : midiMessages)
     {
         auto message = metadata.getMessage();
