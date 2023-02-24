@@ -184,14 +184,11 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     for (const auto metadata : midiMessages)
     {
         auto message = metadata.getMessage();
-        //TODO: this timestamp may not be in usec, need to read further
         const int time = message.getTimeStamp();
         int channel = message.getChannel();
         const juce::uint8* rawmidi = message.getRawData();
         int type = rawmidi[0] & 0xf0;
         int count = message.getMessageLengthFromFirstByte(rawmidi[0]);
-        //DEBUG: Log MIDI messages
-        juce::Logger::writeToLog(message.getDescription());
 
         int data1 = NULL;
         int data2 = NULL;
