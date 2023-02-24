@@ -5,7 +5,7 @@
 // Uncomment the #define directive below when your PGM XML file is ready
 // Add it to the project files with the name "magic.xml"
 
-//#define MAGIC_LOAD_BINARY
+//#define MAGIC_LOAD_BINARY 1
 
 //==============================================================================
 NewProjectAudioProcessor::NewProjectAudioProcessor()
